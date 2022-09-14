@@ -50,7 +50,7 @@ clock = pygame.time.Clock()
 
 # -------- Main Program Loop -----------
 while carryOn:
-    # --- Main event loop
+    # --- Main event loop    
     for event in pygame.event.get(): # User did something
         if event.type == pygame.QUIT: # If user clicked close
               carryOn = False # Flag that we are done so we exit this loop
@@ -87,7 +87,7 @@ while carryOn:
                                                                  "to "
                                                                  "continue.")
 
-    if by <= 0 or by >= 500 - br:c
+    if by <= 0 or by >= 500 - br:
         dy *= -1
 
     if event.type == pygame.KEYDOWN:
