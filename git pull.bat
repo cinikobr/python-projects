@@ -1,2 +1,0 @@
-call git pull
-pause
