@@ -3,6 +3,18 @@ import random
 
 from agar.square import Square
 
+
+def draw_sqr(square):
+    pygame.draw.rect(surface,
+                     BLACK,
+                     pygame.Rect(square.get_sx(),
+                                 square.get_sy(),
+                                 square.get_radius(),
+                                 square.get_radius()
+                                 )
+                     )
+
+
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
@@ -14,15 +26,16 @@ pygame.display.set_caption("Agar")
 squares = []
 
 player = Square(1, 50, 50, 50)
-squares.append(player)
 
-for i in range(50):
+for i in range(100):
     square = Square(i + 2, 10, random.randint(0, 1000), random.randint(0, 600))
     squares.append(square)
 
 running = True
 
 clock = pygame.time.Clock()
+
+print(pygame.mouse.get_pos())
 
 while running:
     # --- Main event loop
@@ -39,22 +52,24 @@ while running:
             player.set_sy(player.get_sy() - 5)
         if event.key == pygame.K_DOWN:
             player.set_sy(player.get_sy() + 5)
+        if event.key == pygame.K_SPACE:
+            print(3)
 
     surface.fill(WHITE)
 
     for square in squares:
-        pygame.draw.rect(surface,
-                         BLACK,
-                         pygame.Rect(square.get_sx(),
-                                     square.get_sy(),
-                                     square.get_radius(),
-                                     square.get_radius()
-                                     )
-                         )
+        if (player.get_sx() <= square.get_sx() <= player.get_sx() + player.get_radius() - square.get_radius()
+                and player.get_sy() <= square.get_sy() <= player.get_sy() + player.get_radius() - square.get_radius()):
+            player.set_radius(player.get_radius() + square.get_radius())
+            squares.remove(square)
 
-        pygame.display.flip()
+    draw_sqr(player)
 
-        clock.tick(60)
+    for square in squares:
+        draw_sqr(square)
 
+    pygame.display.flip()
+
+    clock.tick(60)
 
 pygame.quit()

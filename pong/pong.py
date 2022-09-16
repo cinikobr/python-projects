@@ -1,12 +1,10 @@
-# Import the pygame library and initialise the game engine
-import pygame, sys
+import pygame
+
 pygame.init()
 
 # Define some colors
-BLACK = (0,0,0)
-WHITE = (255,255,255)
-
-
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
 
 # Open a new window
 size = (700, 500)
@@ -14,12 +12,12 @@ screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Pong")
 
 # Import the pygame library and initialise the game engine
-import pygame
+
 pygame.init()
 
 # Define some colors
-BLACK = (0,0,0)
-WHITE = (255,255,255)
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
 
 bx = 350
 by = 250
@@ -48,12 +46,15 @@ carryOn = True
 # The clock will be used to control how fast the screen updates
 clock = pygame.time.Clock()
 
+font = pygame.font.Font('freesansbold.ttf', 32)
+
+
 # -------- Main Program Loop -----------
 while carryOn:
     # --- Main event loop    
-    for event in pygame.event.get(): # User did something
-        if event.type == pygame.QUIT: # If user clicked close
-              carryOn = False # Flag that we are done so we exit this loop
+    for event in pygame.event.get():  # User did something
+        if event.type == pygame.QUIT:  # If user clicked close
+            carryOn = False  # Flag that we are done so we exit this loop
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE and pause:
                 pause = False
@@ -82,10 +83,6 @@ while carryOn:
         dx = 0
         dy = 0
         pause = True
-        print("score: " + str(score1) + "  ||  " + str(score2) + "\n Press "
-                                                                 "space bar "
-                                                                 "to "
-                                                                 "continue.")
 
     if by <= 0 or by >= 500 - br:
         dy *= -1
@@ -98,14 +95,33 @@ while carryOn:
 
     if dx == 1:
         if by > p2y + 25 and p2y < 450:
-            p2y += pm/2
-        if by < p2y + 25 and p2y > 0:
-            p2y -= pm/2
+            p2y += pm / 2.2
+        elif by < p2y + 25 and p2y > 0:
+            p2y -= pm / 2
+    else:
+        if p2y < 225:
+            p2y += pm / 2.5
+        if p2y > 225:
+            p2y -= pm / 2.5
 
     # --- Drawing code should go here
     # First, clear the screen to black.
     screen.fill(BLACK)
-    #Draw the net
+
+    if pause:
+        text = font.render('Press space to continue', True, WHITE, BLACK)
+        textRect = text.get_rect()
+        textRect.center = (350, 250)
+
+        screen.blit(text, textRect)
+
+    text = font.render(str(score1) + '   |   ' + str(score2), True, WHITE, BLACK)
+    textRect = text.get_rect()
+    textRect.center = (350, 50)
+
+    screen.blit(text, textRect)
+
+    # Draw the net
     pygame.draw.line(screen, WHITE, [349, 0], [349, 500], 5)
     pygame.draw.circle(screen, WHITE, [bx, by], br)
     pygame.draw.line(screen, WHITE, [2.5, p1y], [2.5, p1y + 50], 5)
@@ -117,5 +133,5 @@ while carryOn:
     # --- Limit to 60 frames per second
     clock.tick(60)
 
-#Once we have exited the main program loop we can stop the game engine:
+# Once we have exited the main program loop we can stop the game engine:
 pygame.quit()
