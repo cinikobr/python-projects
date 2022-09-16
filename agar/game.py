@@ -1,7 +1,7 @@
 import pygame
 import random
 
-from agar.square import Square
+from square import Square
 
 
 def draw_sqr(square):
@@ -34,8 +34,6 @@ for i in range(100):
 running = True
 
 clock = pygame.time.Clock()
-
-print(pygame.mouse.get_pos())
 
 while running:
     # --- Main event loop
