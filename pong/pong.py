@@ -1,37 +1,33 @@
 import pygame
 
+# Initialise the game engine
 pygame.init()
 
-# Define some colors
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-
-# Open a new window
+# Open a window
 size = (700, 500)
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Pong")
 
-# Import the pygame library and initialise the game engine
-
-pygame.init()
-
-# Define some colors
+# Colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
-bx = 350
-by = 250
-br = 5
-dx = 0
-dy = 0
+# Ball parameters
+ball_x = 350
+ball_y = 250
+ball_radius = 5
+direction_x = 0
+direction_y = 0
 mx = 2.5
 
-p1y = 225
-pm = 5
-p2y = 225
+# Paddle parameters
+paddle_1_y = 225
+paddle_2_y = 225
+paddle_speed = 5
 
-score1 = 0
-score2 = 0
+# Scores
+score_1 = 0
+score_2 = 0
 
 pause = True
 
@@ -40,72 +36,68 @@ size = (700, 500)
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Pong")
 
-# The loop will carry on until the user exits the game (e.g. clicks the close button).
-carryOn = True
+running = True
 
-# The clock will be used to control how fast the screen updates
 clock = pygame.time.Clock()
 
 font = pygame.font.Font('freesansbold.ttf', 32)
 
-
-# -------- Main Program Loop -----------
-while carryOn:
-    # --- Main event loop    
+# Main loop
+while running:
+    # Main event loop
     for event in pygame.event.get():  # User did something
         if event.type == pygame.QUIT:  # If user clicked close
-            carryOn = False  # Flag that we are done so we exit this loop
+            running = False  # Flag that we are done so we exit this loop
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE and pause:
                 pause = False
-                dx += 1
-                dy += 1
+                direction_x += 1
+                direction_y += 1
 
-    # --- Game logic should go here
-    bx += mx * dx
-    by += mx * dy
+    # Game logic
+    ball_x += mx * direction_x
+    ball_y += mx * direction_y
 
-    if bx == 5 and p1y - br <= by <= p1y + 50:
-        dx *= -1
-        bx = 7.5
+    if ball_x == 5 and paddle_1_y - ball_radius <= ball_y <= paddle_1_y + 50:
+        direction_x *= -1
+        ball_x = 7.5
 
-    if bx == 695 and p2y - br <= by <= p2y + 50:
-        dx *= -1
-        bx = 692.5
+    if ball_x == 695 and paddle_2_y - ball_radius <= ball_y <= paddle_2_y + 50:
+        direction_x *= -1
+        ball_x = 692.5
 
-    if bx <= 0 or bx >= 700 - br:
-        if bx <= 0:
-            score2 += 1
+    if ball_x <= 0 or ball_x >= 700 - ball_radius:
+        if ball_x <= 0:
+            score_2 += 1
         else:
-            score1 += 1
-        bx = 350
-        by = 250
-        dx = 0
-        dy = 0
+            score_1 += 1
+        ball_x = 350
+        ball_y = 250
+        direction_x = 0
+        direction_y = 0
         pause = True
 
-    if by <= 0 or by >= 500 - br:
-        dy *= -1
+    if ball_y <= 0 or ball_y >= 500 - ball_radius:
+        direction_y *= -1
 
     if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_DOWN and p1y < 450:
-            p1y += pm
-        if event.key == pygame.K_UP and p1y > 0:
-            p1y -= pm
+        if event.key == pygame.K_DOWN and paddle_1_y < 450:
+            paddle_1_y += paddle_speed
+        if event.key == pygame.K_UP and paddle_1_y > 0:
+            paddle_1_y -= paddle_speed
 
-    if dx == 1:
-        if by > p2y + 25 and p2y < 450:
-            p2y += pm / 2.2
-        elif by < p2y + 25 and p2y > 0:
-            p2y -= pm / 2
+    if direction_x == 1:
+        if ball_y > paddle_2_y + 25 and paddle_2_y < 450:
+            paddle_2_y += paddle_speed / 2.2
+        elif ball_y < paddle_2_y + 25 and paddle_2_y > 0:
+            paddle_2_y -= paddle_speed / 2
     else:
-        if p2y < 225:
-            p2y += pm / 2.5
-        if p2y > 225:
-            p2y -= pm / 2.5
+        if paddle_2_y < 225:
+            paddle_2_y += paddle_speed / 2.5
+        if paddle_2_y > 225:
+            paddle_2_y -= paddle_speed / 2.5
 
-    # --- Drawing code should go here
-    # First, clear the screen to black.
+    # Drawing to window
     screen.fill(BLACK)
 
     if pause:
@@ -115,23 +107,23 @@ while carryOn:
 
         screen.blit(text, textRect)
 
-    text = font.render(str(score1) + '   |   ' + str(score2), True, WHITE, BLACK)
+    # Draw scores
+    text = font.render(str(score_1) + '   |   ' + str(score_2), True, WHITE, BLACK)
     textRect = text.get_rect()
     textRect.center = (350, 50)
 
     screen.blit(text, textRect)
 
-    # Draw the net
+    # Draw objects
     pygame.draw.line(screen, WHITE, [349, 0], [349, 500], 5)
-    pygame.draw.circle(screen, WHITE, [bx, by], br)
-    pygame.draw.line(screen, WHITE, [2.5, p1y], [2.5, p1y + 50], 5)
-    pygame.draw.line(screen, WHITE, [697.5, p2y], [697.5, p2y + 50], 5)
+    pygame.draw.circle(screen, WHITE, [ball_x, ball_y], ball_radius)
+    pygame.draw.line(screen, WHITE, [2.5, paddle_1_y], [2.5, paddle_1_y + 50], 5)
+    pygame.draw.line(screen, WHITE, [697.5, paddle_2_y], [697.5, paddle_2_y + 50], 5)
 
-    # --- Go ahead and update the screen with what we've drawn.
+    # Update screen
     pygame.display.flip()
 
-    # --- Limit to 60 frames per second
+    # Limit to 60 fps
     clock.tick(60)
 
-# Once we have exited the main program loop we can stop the game engine:
 pygame.quit()
